@@ -51,7 +51,9 @@ class YearAdapter(
             }
         }
         holder.itemView.setOnClickListener {
+            val previousSelectedPosition = selectedPosition
             selectedPosition = holder.adapterPosition
+            notifyItemChanged(previousSelectedPosition)
             notifyItemChanged(selectedPosition)
 //            onItemClicked(selectedPosition)
         }
@@ -67,7 +69,6 @@ class YearAdapter(
             }
         })
     }
-
     private fun highlightCenterItems() {
         val parentCenter = recyclerView.height / 2
         val firstVisiblePosition = layoutManager.findFirstVisibleItemPosition()
@@ -84,14 +85,15 @@ class YearAdapter(
                 centerPosition = position
             }
         }
-
         if (centerPosition != RecyclerView.NO_POSITION) {
             onCenterItemChanged(centerPosition)
         }
     }
-
     fun updateData(newItems: List<String>) {
         selectedPosition = RecyclerView.NO_POSITION
         submitList(newItems)
+        if (selectedPosition != RecyclerView.NO_POSITION) {
+            recyclerView.scrollToPosition(selectedPosition)
+        }
     }
 }
