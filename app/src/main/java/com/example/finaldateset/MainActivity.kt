@@ -96,22 +96,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateDaysAndScroll(newDays: List<String>) {
         val dayAdapter = dayRecyclerView.adapter as YearAdapter
-        // 更新 calendar 到新月份以确保获取正确的最大天数
         val newMonthMaxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-
-        // 如果当前选择的天数大于新的月份的最大天数，设置为新的最大天数
+        dayAdapter.updateData(newDays)
         if (selectedDay > newMonthMaxDay) {
             selectedDay = newMonthMaxDay
-            dayAdapter.notifyDataSetChanged()
         }
-        else{
-            dayRecyclerView.post {
-                dayRecyclerView.smoothScrollToPosition(selectedDay-1)
-                dayAdapter.notifyDataSetChanged()
-            }
+        dayAdapter.notifyDataSetChanged()
+        dayRecyclerView.post {
+            dayRecyclerView.smoothScrollToPosition(selectedDay-1)
+            dayRecyclerView.invalidateItemDecorations()
         }
-        dayAdapter.updateData(newDays)
-        dayRecyclerView.invalidateItemDecorations()
     }
 
     private fun updateSelectedDateTextView(year: Int, month: Int, day: Int) {
